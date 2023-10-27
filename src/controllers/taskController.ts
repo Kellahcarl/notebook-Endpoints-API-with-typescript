@@ -35,9 +35,11 @@ export const createNote = async (req: Request, res: Response) => {
       createdAt: new Date(),
     };
 
-    const insertQuery = `INSERT INTO YourTableName (title, content, createdAt) VALUES ('${
-      newNote.title
-    }', '${newNote.content}', '${newNote.createdAt.toISOString()}')`;
+    const insertQuery = `INSERT INTO note (_id,title, content, createdAt) VALUES ('${
+      newNote.id
+    }','${newNote.title}', '${
+      newNote.content
+    }', '${newNote.createdAt.toISOString()}')`;
     await query(insertQuery);
 
     res.status(201).json(newNote);
@@ -65,8 +67,10 @@ export const getAllNotes = async (req: Request, res: Response) => {
 export const getSingleNote = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    // console.log(typeof id);
 
-    const queryString = `SELECT * FROM note WHERE id = ${id}`;
+    const queryString = `SELECT * FROM note WHERE _id = '${id}'`;
+    // const queryString = `SELECT * FROM note `;
 
     const result = await query(queryString);
 
@@ -95,7 +99,7 @@ export const updateNote = async (req: Request, res: Response) => {
     const updateQuery = `
       UPDATE note
       SET title = '${title}', content = '${content}', createdAt = '${createdAt}'
-      WHERE id = ${id}
+      WHERE _id = '${id}'
     `;
 
     await query(updateQuery);
@@ -124,7 +128,7 @@ export const deleteNote = async (req: Request, res: Response) => {
         .json({ error: "ID is required in the request body." });
     }
 
-    const existingNote = await query(`SELECT * FROM note WHERE id = ${id}`);
+    const existingNote = await query(`SELECT * FROM note WHERE _id = ${id}`);
 
     if (!existingNote.recordset || existingNote.recordset.length === 0) {
       return res.status(404).json({ error: "Note not found." });

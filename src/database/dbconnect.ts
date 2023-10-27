@@ -5,6 +5,8 @@ import { sqlConfig } from "../config/config";
 dotenv.config();
 
 const pool = new sql.ConnectionPool(sqlConfig);
+// console.log(pool);
+
 const poolConnect = pool.connect();
 
 export async function query(queryString: string): Promise<sql.IResult<any>> {
@@ -18,3 +20,4 @@ export async function query(queryString: string): Promise<sql.IResult<any>> {
     throw new Error(`Error executing SQL query: ${error}`);
   }
 }
+ 

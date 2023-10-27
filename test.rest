@@ -2,4 +2,16 @@ GET http://localhost:3501
 
 ####
 
-GET http://localhost:3501/note/create
+post http://localhost:3501/note/create
+Content-Type: application/json
+ 
+{
+"title":"Euge444",
+"content":"eugenekorir11@gmaijigul.com a"
+}
+####
+get http://localhost:3501/note/notes
+
+####
+
+get http://localhost:3501/note/notes/2603dd41-a0b3-4319-aac3-0bb3f4a181b7
