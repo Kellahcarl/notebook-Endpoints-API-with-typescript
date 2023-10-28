@@ -7,9 +7,7 @@ export const createNoteSchema = Joi.object({
 });
 
 
-export const deleteNoteSchema = Joi.object({
-  id: Joi.string().uuid().required(),
-});
+
 
 export const updateNoteSchema = Joi.object({
   id: Joi.string().uuid().required(),

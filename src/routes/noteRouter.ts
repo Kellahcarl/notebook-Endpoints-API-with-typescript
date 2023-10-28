@@ -4,12 +4,12 @@ import { createNote, deleteNote, getAllNotes, getSingleNote, testNote, updateNot
 
 const note_router = Router();
 
-note_router.get("/", testNote);
-note_router.post("/create", createNote);
-note_router.get("/notes", getAllNotes);
-note_router.get("/notes/:id", getSingleNote);
+// note_router.get("/", testNote);
+note_router.post("/", createNote);
+note_router.get("/", getAllNotes);
+note_router.get("/:id", getSingleNote);
 note_router.put("/", updateNote);
-note_router.delete("/delete", deleteNote);
+note_router.delete("/:id", deleteNote);
 
 
 

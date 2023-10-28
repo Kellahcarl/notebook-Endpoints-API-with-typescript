@@ -2,11 +2,7 @@ import { Request, Response } from "express";
 import { query } from "../database/dbconnect";
 import { Note } from "../types/interface";
 import { v4 as uuidv4 } from "uuid";
-import {
-  createNoteSchema,
-  deleteNoteSchema,
-  updateNoteSchema,
-} from "../validators/validator";
+import { createNoteSchema, updateNoteSchema } from "../validators/validator";
 
 // testing if we reach here
 export const testNote = (req: Request, res: Response) => {
@@ -94,11 +90,13 @@ export const updateNote = async (req: Request, res: Response) => {
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
-    const { id, title, content, createdAt }: Note = req.body;
+    const { id, title, content }: Note = req.body;
+
+    const NewcreatedAt = new Date();
 
     const updateQuery = `
       UPDATE note
-      SET title = '${title}', content = '${content}', createdAt = '${createdAt}'
+      SET title = '${title}', content = '${content}', createdAt = '${NewcreatedAt.toISOString()}'
       WHERE _id = '${id}'
     `;
 
@@ -115,12 +113,7 @@ export const updateNote = async (req: Request, res: Response) => {
 // logic to delete a note
 export const deleteNote = async (req: Request, res: Response) => {
   try {
-    const { error } = deleteNoteSchema.validate(req.body);
-
-    if (error) {
-      return res.status(400).json({ error: error.details[0].message });
-    }
-    const { id } = req.body;
+    const { id } = req.params;
 
     if (!id) {
       return res
@@ -128,13 +121,13 @@ export const deleteNote = async (req: Request, res: Response) => {
         .json({ error: "ID is required in the request body." });
     }
 
-    const existingNote = await query(`SELECT * FROM note WHERE _id = ${id}`);
+    const existingNote = await query(`SELECT * FROM note WHERE _id = '${id}'`);
 
     if (!existingNote.recordset || existingNote.recordset.length === 0) {
       return res.status(404).json({ error: "Note not found." });
     }
 
-    await query(`DELETE FROM note WHERE id = ${id}`);
+    await query(`DELETE FROM note WHERE _id = '${id}'`);
 
     return res.status(200).json({ message: "Note deleted successfully." });
   } catch (error) {
